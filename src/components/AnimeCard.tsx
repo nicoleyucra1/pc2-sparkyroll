@@ -1,15 +1,4 @@
-import { Link } from 'react-router-dom';
 import type { AnimeStatus, Anime } from '../types';
-
-const badgeStyles: Record<AnimeStatus, string>={
-    viendo: 'bg-green-100 text-green-800',
-    visto: 'bg-yellow-100 text-yellow-800',
-}
-
-const badgeLabels: Record<AnimeStatus, string>={
-    viendo: 'Viendo',
-    visto: 'Visto',
-}
 
 interface Props {
     anime: Anime;

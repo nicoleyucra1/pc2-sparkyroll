@@ -15,7 +15,8 @@ export default function FavoritesPage(){
       setError('');
       try {
         const data = await getAnimeList();
-        setAnimes(data);
+        const ids: number[] = JSON.parse(localStorage.getItem('favorites') || '[]');
+        setAnimes(data.filter((a) => ids.includes(a.id)))
       } catch (err) {
         setError(getErrorMessage(err));
       } finally {
