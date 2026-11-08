@@ -34,7 +34,7 @@ export default function HistoryPage(){
           await deleteHistory({animeId: id});  
           const ids: number[] = JSON.parse(localStorage.getItem(status) || '[]');
           const nuevos = ids.filter((x) => x !== id);
-          localStorage.setItem('favorites',JSON.stringify(nuevos));
+          localStorage.setItem(status,JSON.stringify(nuevos));
           if (status === 'viendo'){
             setViendo(viendo.filter((a) => a.id !== id));
           } else {  
