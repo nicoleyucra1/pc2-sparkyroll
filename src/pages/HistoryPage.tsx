@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getAnimeList } from '../services';
+import { getAnimeList, deleteHistory } from '../services';
 import { getErrorMessage } from '../api';
-import type { Anime} from '../types';
+import type { Anime, AnimeStatus } from '../types';
 import ErrorMessage from '../components/ErrorMessage';
 
-export default function FavoritesPage(){
+export default function HistoryPage(){
   const [viendo, setViendo] = useState<Anime[]>([]);
   const [visto, setVisto] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +25,25 @@ export default function FavoritesPage(){
       } finally {
         setLoading(false);
       }
-    }; 
+    };
     load();
   }, []);
+
+    const handleDeleteHistory = async(id:number, status: AnimeStatus) => {    
+        try {
+          await deleteHistory({animeId: id});  
+          const ids: number[] = JSON.parse(localStorage.getItem('favorites') || '[]');
+          const nuevos = ids.filter((x) => x !== id);
+          localStorage.setItem('favorites',JSON.stringify(nuevos));
+          if (status == 'viendo'){
+            setViendo(viendo.filter((a) => a.id !== id));
+          } else {  
+            setVisto(visto.filter((a) => a.id !== id));
+          } 
+        } catch (err) {
+          setError(getErrorMessage(err));
+        }
+      };
 
     if (loading) return <p>Cargando...</p>;
 
@@ -43,6 +59,10 @@ export default function FavoritesPage(){
             {a.imageUrl && ( <img src={a.imageUrl} alt={a.title} className="h-40 w-full object-cover rounded-lg" />)}
             <h2 className="text-lg font-semibold">{a.title}</h2>        
             <p className="text-sm text-gray-500">{a.genre}</p>
+            <button onClick={() => handleDeleteHistory(a.id, 'viendo')}
+            className="flex-1 bg-red-600 hover:bg-red-800 text-white rounded-lg py-1">
+                Eliminar del historial
+            </button>
             <div className="flex gap-2"></div>
           </div>))}
       </div>
@@ -54,6 +74,10 @@ export default function FavoritesPage(){
             {a.imageUrl && ( <img src={a.imageUrl} alt={a.title} className="h-40 w-full object-cover rounded-lg" />)}
             <h2 className="text-lg font-semibold">{a.title}</h2>        
             <p className="text-sm text-gray-500">{a.genre}</p>
+            <button onClick={() => handleDeleteHistory(a.id, 'visto')}
+            className="flex-1 bg-red-600 hover:bg-red-800 text-white rounded-lg py-1">
+                Eliminar del historial
+            </button>
             <div className="flex gap-2"></div>
           </div>
         ))}
