@@ -15,9 +15,7 @@ export default function FavoritesPage(){
       setError('');
       try {
         const data = await getAnimeList();
-        const ids: number[] = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const favoritos = data.filter((a) => ids.includes(a.id));
-        setAnimes(favoritos);
+        setAnimes(data);
       } catch (err) {
         setError(getErrorMessage(err));
       } finally {
@@ -26,6 +24,7 @@ export default function FavoritesPage(){
     }; 
     load();
   }, []);
+
 
     const handleDeleteFavorite = async(id:number) => {    
     try {
@@ -57,7 +56,7 @@ export default function FavoritesPage(){
             <p className="text-sm text-gray-500">{a.genre}</p>
             <div className="flex gap-2">
             <button onClick={() => handleDeleteFavorite(a.id)}
-            className="flex-1 bg-red-600 hover:bg-red-600 text-white rounded-lg py-1">
+            className="flex-1 bg-red-600 hover:bg-red-800 text-white rounded-lg py-1">
                 Eliminar de favoritos
             </button>
             </div>

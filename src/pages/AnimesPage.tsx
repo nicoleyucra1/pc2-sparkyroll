@@ -38,15 +38,20 @@ export default function AnimesPage(){
     } catch (err) {
       setError(getErrorMessage(err));
     }
-  }
+  };
 
-  const handleStatus = async(id:number, status: AnimeStatus) => {    
-    try {
-      await addHistory({animeId: id, status: status});   
-    } catch (err) {
-      setError(getErrorMessage(err));
-    }
+  const handleStatus = async (id: number, status: AnimeStatus) => {
+  try {
+    await addHistory({ animeId: id, status: status });
+    const ids: number[] = JSON.parse(localStorage.getItem(status) || '[]'); 
+    if (!ids.includes(id)) {                                                 
+      const nuevos = [...ids, id];                                           
+      localStorage.setItem(status, JSON.stringify(nuevos));                    
+    }                                                                          
+  } catch (err) {
+    setError(getErrorMessage(err));
   }
+};
 
   if (loading) return <p>Cargando...</p>
 
